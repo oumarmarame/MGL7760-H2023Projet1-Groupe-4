@@ -1,0 +1,38 @@
+#version - Il définit la version de configuration.
+version: '3.9'
+#services - Il contient toutes les définitions de services.
+services:
+
+#Étape 1 : 1 serveur web + 1 serveur applicatif
+###############################################
+#Serveur Web
+#############
+  web:
+  #nginx:
+    image: nginx:latest
+    container_name: Nginx
+    ports:
+      #- '8000:80'
+      - "90:80"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+
+#Serveur Applicatif
+####################
+  #wsgi:
+  app:
+    image: tiangolo/meinheld-gunicorn:latest
+    container_name: WSGI
+#    ports:
+#      - '8000:80'
+    command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'

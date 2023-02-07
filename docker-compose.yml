@@ -1,0 +1,155 @@
+#web_container="web"
+#app_container="app"
+#db_container="db"
+#cache_container="cache"
+#image_name="biblio_app"
+#version - Il définit la version de configuration.
+version: '3.9'
+#services - Il contient toutes les définitions de services.
+services:
+
+#Étape 2 : 1 serveur web + 1 serveur applicatif + 1 base de données
+####################################################################
+#Serveur Web
+#############
+  web:
+  #nginx:
+    image: nginx:latest
+    container_name: Nginx
+    build: .
+    ports:
+      #- '8000:80'
+      - "90:80"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+
+#Serveur Applicatif
+####################
+  #wsgi:
+  app:
+    image: tiangolo/meinheld-gunicorn:latest
+    container_name: WSGI
+###    restart: unless-stopped
+#    labels:
+###      project: "flask"
+###      day: "12 Feb 2023"
+###    build:
+###      # build the image from Dockerfile
+###      context: .
+###      dockerfile: Dockerfile
+###    environment:
+###      # set database, memcached etc credentials
+###      DB_HOST: db
+###      DB_NAME: flask
+###      DB_USER: flask
+###      DB_PASSWORD: passwordKtuv3ux
+###    volumes:
+###      - ./app:/app
+###    links:
+###      # network connection with these services
+###      - db
+###    depends_on:
+###      # build those images first
+###      - db
+    ###
+#    ports:
+#      - '5000:5000'
+    command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+
+  flask-app:
+    build: flask
+    restart: always
+    ports: 
+      - '8000:8000'
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:8000/flask-health-check || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
+
+
+#Serveur BD
+############
+####################################################################
+#  mysql:
+#    image: mysql:latest
+#    container_name: ${APP_NAME}-mysql
+#    restart: 'on-failure'
+#    environment:
+#      MYSQL_DATABASE: ${MYSQL_DATABASE}
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#      MYSQL_USER: ${MYSQL_USER}
+#      SERVICE_TAGS: dev 
+#      SERVICE_NAME: mysql
+#    volumes:
+#      - './db:/docker-entrypoint-initdb.d'
+#    networks:
+#      - 'biblio'
+
+#networks:
+#  biblio:
+#    driver: bridge  
+####################################################################
+
+  db:
+    image: mysql:latest
+    container_name: MySQL
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    #volumes:
+
+    environment:
+    #   # credentials
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: biblio #ceci vas pouvoir etre consulter dans phpmyadmin
+    #   MYSQL_USER: flask
+    #   MYSQL_PASSWORD: root
+    #    MYSQL_ROOT_PASSWORD: admin
+    #     MYSQL_ALLOW_EMPTY_PASSWORD: root
+    #     MYSQL_RANDOM_ROOT_PASSWORD: root
+    # #  volumes:
+    #    - ./db:/docker-entrypoint-initdb.d/:ro
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: flask_phpmyadmin
+    restart: unless-stopped
+    labels:
+      project: "flask"
+      day: "6 Feb 2023"
+    ports:
+      - "5010:80"
+    #  environment:
+    #    PMA_HOST: db
+    #    PMA_USER: admin
+    #    PMA_PASSWORD: admin
+    #    MYSQL_ROOT_PASSWORD: admin
+
+  redis:
+    image: "redis:alpine"
+
+# volumes definition here
+volumes:
+  # just a persistance data
+  mysql-data:
+    driver: local
+
+#networks:
+#  biblio:
+#    driver: bridge  
+

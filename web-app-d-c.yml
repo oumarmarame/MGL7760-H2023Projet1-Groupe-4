@@ -1,0 +1,68 @@
+#version - Il définit la version de configuration.
+version: '3.8'
+#services - Il contient toutes les définitions de services.
+services:
+############################################################
+#php - Il téléchargera l'image php-fpm.
+#  php:
+#    image: php:latest
+#    container_name: ${APP_NAME}-php
+#    working_dir: /var/www/MGL7760-H2023Projet1-Groupe-4
+#volumes - Il montera le dossier src local dans le dossier /usr/share/nginx/html 
+#à l'intérieur du conteneur.    
+#    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+#    networks:
+#      - 'biblio'
+
+#nginx - Il télécharge la dernière image de Nginx à partir du Docker Hub 
+#et configure une redirection de port avec la directive ports. 
+#Il redirigera toutes les demandes sur le port 8080 de la machine hôte 
+#vers le conteneur Web sur le port 80.
+  web:
+  #nginx:
+    image: nginx:latest
+    container_name: Nginx
+    ports:
+      #- '8000:80'
+      - "90:80"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+
+  #wsgi:
+  app:
+    image: tiangolo/meinheld-gunicorn:latest
+    container_name: WSGI
+#    ports:
+#      - '8000:80'
+    command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+    volumes:
+#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      - ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+
+#  mysql:
+#    image: mysql:latest
+#    container_name: ${APP_NAME}-mysql
+#    restart: 'on-failure'
+#    environment:
+#      MYSQL_DATABASE: ${MYSQL_DATABASE}
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#      MYSQL_USER: ${MYSQL_USER}
+#      SERVICE_TAGS: dev 
+#      SERVICE_NAME: mysql
+#    volumes:
+#      - './db:/docker-entrypoint-initdb.d'
+#    networks:
+#      - 'biblio'
+
+#networks:
+#  biblio:
+#    driver: bridge  

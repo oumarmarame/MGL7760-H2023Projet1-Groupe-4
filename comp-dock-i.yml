@@ -1,0 +1,25 @@
+#Pour effectuer cette première étape, vous aurez besoin de créer un fichier de configuration Docker Compose qui définit les deux conteneurs nécessaires (un pour le serveur web et un pour le serveur applicatif). Ce fichier de configuration définit également les ports exposés et les volumes montés pour chaque conteneur.
+
+#Voici un exemple simple de fichier Docker Compose pour cette étape :
+
+version: '3'
+services:
+web:
+image: nginx:latest
+ports:
+- "80:80"
+volumes:
+- ./web:/usr/share/nginx/html
+
+app:
+image: node:latest
+command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+volumes:
+- ./web:/usr/share/nginx/html
+
+#Une fois ce fichier en place, vous pouvez utiliser la commande "docker-compose up" pour démarrer les conteneurs et les faire fonctionner ensemble. Lorsque les conteneurs sont en cours d'exécution, vous pouvez accéder à l'application en utilisant l'URL http://localhost/ pour voir le message "Hello World!" affiché.
+
+#Notez que cet exemple est très simple et n'inclut pas de gestion de la configuration ou de la persistance de données, ce qui peut être nécessaire pour une application plus complexe.
+
+
+

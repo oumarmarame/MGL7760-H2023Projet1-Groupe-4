@@ -1,0 +1,12 @@
+version: '3'
+services:
+web:
+image: nginx:latest
+ports:
+- "8080:80"
+volumes:
+- ./src:/private/var/www/MGL7760-H2023Projet1-Groupe-4/proj/src
+links:
+- php
+php:
+image: php:7-fpm
