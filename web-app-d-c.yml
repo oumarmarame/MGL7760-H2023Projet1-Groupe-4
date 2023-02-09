@@ -1,5 +1,10 @@
+#web_container="web"
+#app_container="app"
+#db_container="db"
+#cache_container="cache"
+#image_name="biblio_app"
 #version - Il définit la version de configuration.
-version: '3.8'
+version: '3.9'
 #services - Il contient toutes les définitions de services.
 services:
 ############################################################
@@ -19,6 +24,11 @@ services:
 #et configure une redirection de port avec la directive ports. 
 #Il redirigera toutes les demandes sur le port 8080 de la machine hôte 
 #vers le conteneur Web sur le port 80.
+
+#Étape 1 : 1 serveur web + 1 serveur applicatif
+###############################################
+#Serveur Web
+#############
   web:
   #nginx:
     image: nginx:latest
@@ -30,23 +40,38 @@ services:
 #      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
       #- './configs/nginx:/etc/nginx/conf.d'
       - ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
+    networks:
+      - 'biblio'
 
+#Serveur Applicatif
+####################
   #wsgi:
   app:
     image: tiangolo/meinheld-gunicorn:latest
     container_name: WSGI
-#    ports:
-#      - '8000:80'
-    command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - '8000:5000'
+      #- '8000:5000'
+    #command: "echo 'Hello World!' > /usr/share/nginx/html/index.html" #il retourne en ligne de commande => WSGI              | Hello World! #// WSGI exited with code 0
     volumes:
+      - .:/var/www/html
+    environment:
+      FLASK_DEBUG: "true"
+      #- ./app:/var/app/html     
 #      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
       #- './configs/nginx:/etc/nginx/conf.d'
-      - ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
+      #- ./app:/var/www/MGL7760-H2023Projet1-Groupe-4/app/app.py
+      #- ./app:/usr/share/wsgi/html  
+    networks:
+      - 'biblio'
+    # environment:
+    #     FLASK_DEBUG: "true"
 
+#Étape 2 : 1 serveur web + 1 serveur applicatif + 1 base de données
+####################################################################
 #  mysql:
 #    image: mysql:latest
 #    container_name: ${APP_NAME}-mysql
@@ -66,3 +91,78 @@ services:
 #networks:
 #  biblio:
 #    driver: bridge  
+
+#Serveur BD
+############
+  db:
+    image: mysql:latest
+    container_name: MySQL
+    restart: unless-stopped
+    ports:
+      - 3306
+    volumes:
+      - './db:/docker-entrypoint-initdb.d'
+      #- './configs/nginx:/etc/nginx/conf.d'
+      #- ./web:/usr/share/nginx/html
+#    networks:
+#      - 'biblio'
+    environment:
+    #   # credentials
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: biblio #ceci vas pouvoir etre consulter dans phpmyadmin
+    #   MYSQL_USER: flask
+    #   MYSQL_PASSWORD: root
+    #    MYSQL_ROOT_PASSWORD: admin
+    #     MYSQL_ALLOW_EMPTY_PASSWORD: root
+    #     MYSQL_RANDOM_ROOT_PASSWORD: root
+    # #  volumes:
+    #    - ./db:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - 'biblio'
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: flask_phpmyadmin
+    restart: unless-stopped
+    # labels:
+    #   project: "flask"
+    #   day: "6 Feb 2023"
+    ports:
+     - "5010:80"
+    #  environment:
+    #    PMA_HOST: db
+    #    PMA_USER: admin
+    #    PMA_PASSWORD: admin
+    #    MYSQL_ROOT_PASSWORD: admin
+
+#Étape 3 : 1 serveur web + 1 serveur applicatif + 1 base de données + 1 serveur de cache mémoire
+#################################################################################################
+#Cache Mémoire
+###############
+  cache:
+    image: redis:latest
+    container_name: Redis
+    #ports:
+    #  - "6379:80"
+    # networks:
+    #   - frontend
+    # deploy:
+    #   replicas: 2
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
+    #   restart_policy:
+    #     condition: on-failure
+
+
+# # volumes definition here
+# volumes:
+#   # just a persistance data
+#   biblio-mysql-data:
+#     driver: local
+
+networks:
+  biblio:
+    driver: bridge  

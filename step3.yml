@@ -79,16 +79,23 @@ services:
 #Serveur BD
 ############
   db:
-    image: ...:latest
+    image: mysql:latest
     container_name: MySQL
-#    ports:
-#      - '8000:80'
+    #restart: unless-stopped
+    restart: 'on-failure'
+    ports:
+      - 3306
     volumes:
-      #- './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
-      #- './configs/nginx:/etc/nginx/conf.d'
-      #- ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
+      - './db:/docker-entrypoint-initdb.d'
+    environment:
+      MYSQL_DATABASE: biblio #ceci vas pouvoir etre consulter dans phpmyadmin
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_PASSWORD: admin
+      #MYSQL_USER: root
+      # SERVICE_TAGS: dev 
+      # SERVICE_NAME: db
+    networks:
+      - 'biblio'
 
 #Étape 3 : 1 serveur web + 1 serveur applicatif + 1 base de données + 1 serveur de cache mémoire
 #################################################################################################
