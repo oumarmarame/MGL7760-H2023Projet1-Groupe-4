@@ -1,25 +1,19 @@
-#version - Il définit la version de configuration.
 version: '3.9'
-#services - Il contient toutes les définitions de services.
 services:
 
-#Étape 2 : 1 serveur web + 1 serveur applicatif + 1 base de données
-####################################################################
 #Serveur Web
 #############
   web:
   #nginx:
     image: nginx:latest
     container_name: Nginx
+    restart: 'on-failure'
     ports:
-      #- '8000:80'
       - "90:80"
     volumes:
-#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
-      #- './configs/nginx:/etc/nginx/conf.d'
       - ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
+    networks:
+      - 'biblio'
 
 #Serveur Applicatif
 ####################
@@ -27,109 +21,60 @@ services:
   app:
     image: tiangolo/meinheld-gunicorn:latest
     container_name: WSGI
-###    restart: unless-stopped
-#    labels:
-###      project: "flask"
-###      day: "12 Feb 2023"
-###    build:
-###      # build the image from Dockerfile
-###      context: .
-###      dockerfile: Dockerfile
-###    environment:
-###      # set database, memcached etc credentials
-###      DB_HOST: db
-###      DB_NAME: flask
-###      DB_USER: flask
-###      DB_PASSWORD: passwordKtuv3ux
-###    volumes:
-###      - ./app:/app
-###    links:
-###      # network connection with these services
-###      - db
-###    depends_on:
-###      # build those images first
-###      - db
-    ###
-#    ports:
-#      - '5000:5000'
-    command: "echo 'Hello World!' > /usr/share/nginx/html/index.html"
+    #restart: 'on-failure'
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - '8000:5000'
     volumes:
-#      - './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
-      #- './configs/nginx:/etc/nginx/conf.d'
-      - ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
+      - ./app:/var/www/MGL7760-H2023Projet1-Groupe-4/app
+    environment:
+      FLASK_DEBUG: "true"
+    networks:
+      - 'biblio'
 
 #Serveur BD
 ############
-####################################################################
-#  mysql:
-#    image: mysql:latest
-#    container_name: ${APP_NAME}-mysql
-#    restart: 'on-failure'
-#    environment:
-#      MYSQL_DATABASE: ${MYSQL_DATABASE}
-#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#      MYSQL_USER: ${MYSQL_USER}
-#      SERVICE_TAGS: dev 
-#      SERVICE_NAME: mysql
-#    volumes:
-#      - './db:/docker-entrypoint-initdb.d'
-#    networks:
-#      - 'biblio'
-
-#networks:
-#  biblio:
-#    driver: bridge  
-####################################################################
-
   db:
     image: mysql:latest
     container_name: MySQL
-#    ports:
-#      - '8000:80'
-    volumes:
-      #- './src:/var/www/MGL7760-H2023Projet1-Groupe-4'
-      #- './configs/nginx:/etc/nginx/conf.d'
-      #- ./web:/usr/share/nginx/html
-#    networks:
-#      - 'biblio'
-
-        # pass volume named mysql-data to mysql container
-      - mysql-data:/var/lib/db
     restart: unless-stopped
-#    labels:
-#      project: "flask"
-#      day: "12 Feb 2023"
-    # ports:
-    #   - "3306:3306"
-#    environment:
-#      # credentials
-#      MYSQL_ROOT_PASSWORD: passwordKtuv3ux
-#      MYSQL_DATABASE: flask
-#      MYSQL_USER: flask
-#      MYSQL_PASSWORD: passwordKtuv3ux
-
-  phpmyadmin:
-    depends_on:
-      - db
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: flask_phpmyadmin
-    restart: unless-stopped
-    labels:
-      project: "flask"
-      day: "12 Feb 2023"
+    #restart: 'on-failure'
     ports:
-      - "5010:80"
+      - '3306:3306' #si on ne le fixe pas il met des port aléoratoire à chaque démarage
+    expose:
+      - "3306"
+    volumes:
+      - './db:/docker-entrypoint-initdb.d'
     environment:
-      PMA_HOST: db
-      PMA_USER: flask
-      PMA_PASSWORD: passwordKtuv3ux
-      MYSQL_ROOT_PASSWORD: passwordKtuv3ux
+      MYSQL_DATABASE: biblio #ceci vas être la bd vide crée
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_USER: db
+      MYSQL_PASSWORD: dbpw
+    networks:
+      - 'biblio'
 
-# volumes definition here
-volumes:
-  # just a persistance data
-  mysql-data:
-    driver: local
+
+#Cache Mémoire
+###############
+  cache:
+    image: redis:latest
+    container_name: Redis
+    restart: 'on-failure'
+    #ports:
+      #- 6379
+    #  - "6379:80"
+    # networks:
+    #   - frontend
+    # deploy:
+    #   replicas: 2
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
+    #   restart_policy:
+    #     condition: on-failure
+
+networks:
+  biblio:
+    driver: bridge  

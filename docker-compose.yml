@@ -7,6 +7,7 @@ services:
   #nginx:
     image: nginx:latest
     container_name: Nginx
+    restart: 'on-failure'
     ports:
       - "90:80"
     volumes:
@@ -20,13 +21,14 @@ services:
   app:
     image: tiangolo/meinheld-gunicorn:latest
     container_name: WSGI
+    #restart: 'on-failure'
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
       - '8000:5000'
     volumes:
-      - .:/var/www/html
+      - ./app:/var/www/MGL7760-H2023Projet1-Groupe-4/app
     environment:
       FLASK_DEBUG: "true"
     networks:
@@ -37,14 +39,19 @@ services:
   db:
     image: mysql:latest
     container_name: MySQL
+    restart: unless-stopped
+    #restart: 'on-failure'
     ports:
-      - 3306
+      - '3306:3306' #si on ne le fixe pas il met des port aléoratoire à chaque démarage
+    expose:
+      - "3306"
     volumes:
       - './db:/docker-entrypoint-initdb.d'
-    restart: 'on-failure'
     environment:
-      MYSQL_DATABASE: biblio #ceci vas pouvoir etre consulter dans phpmyadmin
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: biblio #ceci vas être la bd vide crée
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_USER: db
+      MYSQL_PASSWORD: dbpw
     networks:
       - 'biblio'
 
@@ -54,7 +61,9 @@ services:
   cache:
     image: redis:latest
     container_name: Redis
+    restart: 'on-failure'
     #ports:
+      #- 6379
     #  - "6379:80"
     # networks:
     #   - frontend

@@ -7,8 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 #create the object of Flask
 app = Flask(__name__)
 #SqlAlchemy Database Configuration With Mysql
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql:///biblio.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost/flaskcodeloop'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@db''@localhost/flaskcodeloop'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:rootpw@db:3306/biblio'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
@@ -78,3 +79,11 @@ class Livre(db.Model):
 
 if __name__ == '__main__':
     db.create_all()
+    
+    @app. route ('/test_connection')
+    def test connection():
+        try:
+        db.create all ()
+        return "Connection to database is successful" 
+    except Exception as e:
+        return "Error while connecting to the database: " + str(e)

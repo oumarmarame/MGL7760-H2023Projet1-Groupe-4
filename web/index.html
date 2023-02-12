@@ -1,86 +1,18 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<title>Page Test</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="index.css">
-<p>Notre page Nginx avec Docker Compose dans le dossier web</p>
-
-
+    <title>Page Test</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="index.css">
+    <p>Notre page Nginx avec Docker Compose dans le dossier web</p>
 </head>
+
 <body>
 
-<h2>Hello World! Installons Nginx avec Docker Compose.</h2>
-<p>Voicie notre tableau de test.</p>
+    <h2>Hello World! Nginx</h2>
 
-<table>
-    <tr>
-      <td>Titre</td>
-      <td>Description</td>
-      <td>Isbn</td>
-      <td>Annee_apparition</td>
-      <td>Image</td>
-      <td>Auteurs</td>
-      <td>Editeur</td>
-      <td>Categories</td>
-    </tr>
+    <script>class RocketElementorAnimation { constructor() { this.deviceMode = document.createElement("span"), this.deviceMode.id = "elementor-device-mode", this.deviceMode.setAttribute("class", "elementor-screen-only"), document.body.appendChild(this.deviceMode) } _detectAnimations() { let t = getComputedStyle(this.deviceMode, ":after").content.replace(/"/g, ""); this.animationSettingKeys = this._listAnimationSettingsKeys(t), document.querySelectorAll(".elementor-invisible[data-settings]").forEach(t => { const e = t.getBoundingClientRect(); if (e.bottom >= 0 && e.top <= window.innerHeight) try { this._animateElement(t) } catch (t) { } }) } _animateElement(t) { const e = JSON.parse(t.dataset.settings), i = e._animation_delay || e.animation_delay || 0, n = e[this.animationSettingKeys.find(t => e[t])]; if ("none" === n) return void t.classList.remove("elementor-invisible"); t.classList.remove(n), this.currentAnimation && t.classList.remove(this.currentAnimation), this.currentAnimation = n; let s = setTimeout(() => { t.classList.remove("elementor-invisible"), t.classList.add("animated", n), this._removeAnimationSettings(t, e) }, i); window.addEventListener("rocket-startLoading", function () { clearTimeout(s) }) } _listAnimationSettingsKeys(t = "mobile") { const e = [""]; switch (t) { case "mobile": e.unshift("_mobile"); case "tablet": e.unshift("_tablet"); case "desktop": e.unshift("_desktop") }const i = []; return ["animation", "_animation"].forEach(t => { e.forEach(e => { i.push(t + e) }) }), i } _removeAnimationSettings(t, e) { this._listAnimationSettingsKeys().forEach(t => delete e[t]), t.dataset.settings = JSON.stringify(e) } static run() { const t = new RocketElementorAnimation; requestAnimationFrame(t._detectAnimations.bind(t)) } } document.addEventListener("DOMContentLoaded", RocketElementorAnimation.run);</script>
+</body>
 
-    <tr>
-            <td></td>The Pragmatic Programmer</td><td></td><td>135957052</td><td>2019</td><td></td><td>"David Thomas</td><td>Andrew Hunt"</td><td>Addison Wesley</td><td>Programming</td>
-            </tr><tr>
-            <td>Learning Python</td><td></td><td>978-1-449-35573-9</td><td>2013</td><td></td><td>Mark Lutz</td><td>O’REILLY</td><td>"Programming Languages</td><td>Python"</td>
-            </tr><tr>
-            <td>HTTP The Definitive Guide</td><td></td><td>978-1-56592-509-0</td><td>2002</td><td></td><td>"David Gourley</td><td>Brian Totty"</td><td>O’REILLY</td><td>Web</td>
-            </tr><tr>
-            <td>High-Performance Client/Server</td><td></td><td>0-471-16269-8</td><td>1998</td><td></td><td>"Chris Loosley</td><td>Frank Douglas"</td><td>Wiley</td><td>Distributed Systems</td>
-            </tr><tr>
-            <td>Operating Systems</td><td></td><td>0-13-638677-6</td><td>1997</td><td></td><td>"Andrew S. Tanenbaum</td><td>Albert S. Woodhull"</td><td>Prentice Hall</td><td>Operating Systems</td>
-            </tr><tr>
-            <td>Concurrent Systems</td><td></td><td>0-321-11788-3</td><td>2003</td><td></td><td>Jean Bacon</td><td>Addison Wesley</td><td>"Operating Systems</td><td>Distributed Systems</td><td>Databases"</td>
-            </tr><tr>
-            <td>The Art of Multiprocessor Programming</td><td></td><td>978-0-12-415950-1</td><td>2121</td><td></td><td>"M. Herlihy</td><td>V. Luchangco</td><td>N. Shavit</td><td>M.Spear"</td><td>MK</td><td>Programming</td>
-            </tr><tr>
-            <td>Think Python</td><td></td><td>978-1-491-93936-9</td><td>2016</td><td></td><td>Allen B. Downey</td><td>O’REILLY</td><td>"Programming Languages</td><td>Python"</td>
-            </tr><tr>
-            <td>Data Structures in Java</td><td></td><td>0-201-30564-X</td><td>1998</td><td></td><td>Thomas A. Standish</td><td>Addison Wesley</td><td>"Data Structures</td><td>Java</td><td>Programming"</td>
-            </tr><tr>
-            <td>Data Abstraction and Problem Solving with Java</td><td></td><td>0-201-70220-7</td><td>2001</td><td></td><td>"Frank M.Carrano</td><td>Janet J. Prichard"</td><td>Addison Wesley</td><td>"Data Structures</td><td>Java</td><td>Programming"</td>
-            </tr><tr>
-            <td>Advanced Data Structures</td><td></td><td>978-1-108-73551-3</td><td>2019</td><td></td><td>Peter Brass</td><td>Cambridge</td><td>Data Structures</td>
-            </tr><tr>
-            <td>Fundamentals of Data Structures</td><td></td><td>0-914894-20X</td><td>1976</td><td></td><td>"E. Horowitz</td><td>S. Sahni"</td><td>Pitman</td><td>Data Structures</td>
-            </tr><tr>
-            <td>Computer Algorithms</td><td></td><td>0-201-06035-3</td><td>1988</td><td></td><td>Sara Baase</td><td>Addison Wesley</td><td>Algorithms</td>
-            </tr><tr>
-            <td>Algorithms Unlocked</td><td></td><td>978-0-262-51880-2</td><td>2013</td><td></td><td>Thomas H. Cormen</td><td>The MIT Press</td><td>Algorithms</td>
-            </tr><tr>
-            <td>Introduction to Algorithms</td><td></td><td>978-0-262-04630-5</td><td>2022</td><td></td><td>"Thomas H. Cormen</td><td>Charles E. Leiserson</td><td>Ronald L. Rivest</td><td>Clifford Stein"</td><td>The MIT Press</td><td>Algorithms</td>
-            </tr><tr>
-            <td>Programming</td><td></td><td>978-0-321-99278-9</td><td>2014</td><td></td><td>Bjarne Stroustrup</td><td>Addison Wesley</td><td>"Programming</td><td>C++</td><td>Programming Languages"</td>
-            </tr><tr>
-            <td>Programming Rust</td><td></td><td>978-1-492-05259-3</td><td>2021</td><td></td><td>"Jim Blandy</td><td>Jason Orendorff</td><td>Leonora F. S. Tindall"</td><td>O’REILLY</td><td>"Rust</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td>Foundations of Computer Science</td><td></td><td>0-7167-8233-2</td><td>1992</td><td></td><td>"Alfred V. Aho</td><td>Jeffrey D. Ullman"</td><td>Computer Science Press</td><td>Computer Science</td>
-            </tr><tr>
-            <td>Computer Science</td><td></td><td>978-0-13-407642-3</td><td>2017</td><td></td><td>"Robert Sedgewick</td><td>Kevin Wayne"</td><td>Addison Wesley</td><td>Computer Science</td>
-            </tr><tr>
-            <td>Compilers</td><td></td><td>0-201-10088-6</td><td>1988</td><td></td><td>"Alfred V. Aho</td><td>Ravi Sethi</td><td>Jeffrey D. Ullman"</td><td>Addison Wesley</td><td>Compilers</td>
-            </tr><tr>
-            <td>Advanced Programming in the UNIX Environment</td><td></td><td>0-201-56317-7</td><td>1999</td><td></td><td>W. Richard Stevens</td><td>Addison Wesley</td><td>"C</td><td>UNIX</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td>Fundamentals of Data Structures in C</td><td></td><td>9780-929306-40-7</td><td>2008</td><td></td><td>"E. Horowitz</td><td>S. Sahni</td><td>S. Anderson-Freed"</td><td>Silicon Press</td><td>"Data Structures</td><td>C"</td>
-            </tr><tr>
-            <td>Le Langage C</td><td></td><td>978-2-10-071577-0</td><td>2014</td><td></td><td>"Brian W. Kernighan</td><td>Dennis M. Ritchie"</td><td>Dunod</td><td>"C</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td><td>Advanced C</td><td></td><td>0-672-48417-X</td><td>1988</td><td></td><td>"Paul Anderson</td><td>Gail Anderson"</td><td>Hayden Books</td><td>"C</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td>Topics in C Programming</td><td></td><td>0-672-46290-7</td><td>1987</td><td></td><td>"Stephen G. Kochan</td><td>Patrick H. Wood"</td><td>Hayden Books</td><td>"C</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td>L’informatique répartie sous Unix</td><td></td><td>0399-4198</td><td>1992</td><td></td><td>"Michel Gabassi</td><td>Bertrand Dupouy"</td><td>EYROLLES</td><td>"C</td><td>UNIX</td><td>Distributed Systems</td><td>Programming Languages</td><td>Programming"</td>
-            </tr><tr>
-            <td>La Communication sous UNIX</td><td></td><td>2-7042-1240-6</td><td>1990</td><td></td><td>Jean-Marie Rifflet</td><td>McGraw-Hill</td><td>"C</td><td>UNIX</td><td>Distributed Systems</td><td>Programming Languages</td><td>Programming"</td>
-    </tr>
-  </table>
-
-<script>class RocketElementorAnimation{constructor(){this.deviceMode=document.createElement("span"),this.deviceMode.id="elementor-device-mode",this.deviceMode.setAttribute("class","elementor-screen-only"),document.body.appendChild(this.deviceMode)}_detectAnimations(){let t=getComputedStyle(this.deviceMode,":after").content.replace(/"/g,"");this.animationSettingKeys=this._listAnimationSettingsKeys(t),document.querySelectorAll(".elementor-invisible[data-settings]").forEach(t=>{const e=t.getBoundingClientRect();if(e.bottom>=0&&e.top<=window.innerHeight)try{this._animateElement(t)}catch(t){}})}_animateElement(t){const e=JSON.parse(t.dataset.settings),i=e._animation_delay||e.animation_delay||0,n=e[this.animationSettingKeys.find(t=>e[t])];if("none"===n)return void t.classList.remove("elementor-invisible");t.classList.remove(n),this.currentAnimation&&t.classList.remove(this.currentAnimation),this.currentAnimation=n;let s=setTimeout(()=>{t.classList.remove("elementor-invisible"),t.classList.add("animated",n),this._removeAnimationSettings(t,e)},i);window.addEventListener("rocket-startLoading",function(){clearTimeout(s)})}_listAnimationSettingsKeys(t="mobile"){const e=[""];switch(t){case"mobile":e.unshift("_mobile");case"tablet":e.unshift("_tablet");case"desktop":e.unshift("_desktop")}const i=[];return["animation","_animation"].forEach(t=>{e.forEach(e=>{i.push(t+e)})}),i}_removeAnimationSettings(t,e){this._listAnimationSettingsKeys().forEach(t=>delete e[t]),t.dataset.settings=JSON.stringify(e)}static run(){const t=new RocketElementorAnimation;requestAnimationFrame(t._detectAnimations.bind(t))}}document.addEventListener("DOMContentLoaded",RocketElementorAnimation.run);</script></body>
 </html>

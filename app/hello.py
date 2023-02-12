@@ -21,7 +21,3 @@ def comments():
                 ]
 
     return render_template('comments.html', comments=comments)
-
-if __name__ == "__app__":
-    # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=True)
