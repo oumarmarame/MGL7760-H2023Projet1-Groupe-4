@@ -4,6 +4,16 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
+# def create_app():
+#     app = Flask(__name__)
+
+#     @app.route("/")
+#     def index():
+#         return "hello world"
+    
+#     return app
+
+
 @app.route('/')
 def hello():
     return render_template('index.html', utc_dt=datetime.datetime.utcnow())
@@ -21,7 +31,3 @@ def comments():
                 ]
 
     return render_template('comments.html', comments=comments)
-
-if __name__ == "__app__":
-    # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=True)

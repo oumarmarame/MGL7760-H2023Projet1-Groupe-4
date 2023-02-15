@@ -8,12 +8,18 @@ services:
     image: nginx:latest
     container_name: Nginx
     restart: 'on-failure'
-    ports:
-      - "90:80"
+    # working_dir: "/var/www"
     volumes:
       - ./web:/usr/share/nginx/html
+      #- ./:/var/www
+      #- ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "90:80"
     networks:
       - 'biblio'
+    depends_on:
+      - app
+      # - db
 
 #Serveur Applicatif
 ####################
@@ -21,6 +27,7 @@ services:
   app:
     image: tiangolo/meinheld-gunicorn:latest
     container_name: WSGI
+    #command: gunicorn --bind 0.0.0.0:8000 --workers 3 "app.create_app:create_app()"
     #restart: 'on-failure'
     build:
       context: .
@@ -28,30 +35,43 @@ services:
     ports:
       - '8000:5000'
     volumes:
-      - ./app:/var/www/MGL7760-H2023Projet1-Groupe-4/app
+      - .:/var/www/html
     environment:
       FLASK_DEBUG: "true"
     networks:
       - 'biblio'
+    depends_on:
+      - cache
+      - db
+
 
 #Serveur BD
 ############
   db:
     image: mysql:latest
     container_name: MySQL
-    restart: unless-stopped
-    #restart: 'on-failure'
+    #restart: unless-stopped
+    restart: 'on-failure'
     ports:
       - '3306:3306' #si on ne le fixe pas il met des port aléoratoire à chaque démarage
-    expose:
-      - "3306"
+    # expose:
+    #   - "3306"
+    # env_file:
+    #  - .env
     volumes:
       - './db:/docker-entrypoint-initdb.d'
+      #- mysql-data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: biblio #ceci vas être la bd vide crée
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_USER: db
       MYSQL_PASSWORD: dbpw
+      # MYSQL_DATABASE: ${MYSQL_DATABASE}
+      # MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # MYSQL_USER: ${MYSQL_USER}
+      # SERVICE_TAGS: dev 
+      # SERVICE_NAME: mysql
     networks:
       - 'biblio'
 
@@ -61,20 +81,18 @@ services:
   cache:
     image: redis:latest
     container_name: Redis
+    # volumes:
+    #   - redis-data:/data
     restart: 'on-failure'
-    #ports:
-      #- 6379
-    #  - "6379:80"
-    # networks:
-    #   - frontend
-    # deploy:
-    #   replicas: 2
-    #   update_config:
-    #     parallelism: 2
-    #     delay: 10s
-    #   restart_policy:
-    #     condition: on-failure
+    ports:
+      - 6379
+    #  - "6379:6379"
+    networks:
+      - biblio
 
+  # volumes:
+  #   #mysql-data:
+  #   redis-data:
 networks:
   biblio:
     driver: bridge  

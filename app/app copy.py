@@ -1,61 +1,64 @@
-from flask import Flask, make_response, redirect, url_for, render_template, request
-from blueprints.affichage_statique.affichage_statique import affichage_statique
-from blueprints.comptes.comptes import comptes 
-from models import Personnage, Item, db 
-from datetime import date
-from sqlalchemy.sql import func
-
-def creer_application():
-    app_flask = Flask(__name__)
-    app_flask.secret_key = "gb[>wZy.pR9*I*F"
-    app_flask.register_blueprint(affichage_statique)
-    app_flask.register_blueprint(comptes)
-    #app_flask.config['SQLALCHEMY_DATABASE_URI']="mysql://root:rootpw@localhost:3306/biblio"
-    app_flask.config['SQLALCHEMY_DATABASE_URI']="mysql://root:root@localhost:3307/travail2" #connexionàlabase
-    app_flask.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #pour eviter un bug sur ce qui est fait dans notre db
-    return app_flask
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 
-app = creer_application()
-db.init_app(app) #prendre lapplication flask et l'initialiser
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:rootpw@db:3306/biblio'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-@app.route("/")
-def accueil():
-    return "la page créer personnage : /personnages/creer."
+             
+def create_app():
+    @app.route('/')
+    def about():
+        return 'hello'
+    return app
+    # app = Flask(__name__)
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:rootpw@db:3306/biblio'
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # db = SQLAlchemy(app)
+        
+        
+class Auteur(db.Model):
+    id_auteur = db.Column(db.Integer, primary_key=True)
+    nom_auteur = db.Column(db.String(30), nullable=False)
 
 
-@app.route("/personnages/creer") #c'est une route qui vas creer un personnage
-def creer_personnage():
-    personnage = Personnage(nom='Phil', niveau='1', date_creation=date.today()) #constructeur
-    db.session.add(personnage) #il vas lire et ajouter
-    db.session.commit() #si n ne fait pas de commito n ne verras psa nos donnee apparaitre
-    return render_template('liste.html', personnages=Personnage.query.all()) #faire une requette pour avoir toute les personnage 
+class AuteurLivre(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_auteur = db.Column(db.Integer, db.ForeignKey('auteur.id_auteur'))
+    
+
+class Categorie(db.Model):
+    id_categorie = db.Column(db.Integer, primary_key=True)
+    code_categorie = db.Column(db.String(15), nullable=False)
+    nom_categorie = db.Column(db.String(30), nullable=False)
+
+    
+class CategorieLivre(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_categorie = db.Column(db.Integer, db.ForeignKey('categorie.id_categorie'))
+
+    
+class Editeur(db.Model):
+    id_editeur = db.Column(db.Integer, primary_key=True)
+    nom_editeur = db.Column(db.String(30), nullable=False)
 
 
-@app.route("/personnages/effacer") #c'est une route qui vas effacer un personnage
-def creer_personnage_effacer():
-    phil = Personnage.query.filter_by(nom='Phil').first() #on peu chercher par id aussi
-    db.session.delete(phil)
-    db.session.commit ()
-    return "phil a été effacé"
+class Livre(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titre = db.Column(db.String(30), unique=True, nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    annee_apparition = db.Column(db.Date, nullable=False)
+    image = db.Column(db.String(100), nullable=False)
+    categorie = db.Column(db.String(15), nullable=False)
+    date_creation = db.Column(db.Date, nullable=False)
+    date_modification = db.Column(db.Date, nullable=False)
+    id_editeur = db.Column(db.Integer, db.ForeignKey('editeur.id_editeur'))
+    
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
-@app.route("/personnages/<int:niveau>")
-def changer_niveau(niveau) :
-    phil = Personnage.query.filter_by(nom='Phil').first()
-    phil.niveau += niveau
-    db.session.commit()
-    return f"phil a monté de {niveau} niveau(x). Nouveau niveau : {phil.niveau}"
-
-@app.route("/items/<item>")
-def ajout_item(item):
-    phil = Personnage.query.filter_by(nom='Phil').first()
-    item_cree = Item(nom=item, poids=12.2)
-    phil.item.append(item_cree)
-
-@app.route(" /poids")
-def poids():
-    resultat, = Item.query.with_entities(func.max(Item.poids).label("poids")).filter_by(personnage_id=8).first()
-    return f"phil a maintenant {resultat} kg"
-
-if __name__== "__main__":
+if __name__ == "__app__":
     app.run(debug=True)

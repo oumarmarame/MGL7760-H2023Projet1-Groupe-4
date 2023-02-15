@@ -1,184 +1,129 @@
-USE `biblio`;
 
---
--- Base de données : `biblio`
---
-
--- --------------------------------------------------------
-
---
--- Structure de la table `auteur`
---
-
-CREATE TABLE `auteur` (
-  `id_auteur` int(11) NOT NULL,
-  `nom_auteur` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `auteur_livre`
---
-
-CREATE TABLE `auteur_livre` (
+CREATE TABLE `Auteur` (
   `id` int(11) NOT NULL,
-  `id_auteur` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `nom` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Structure de la table `categorie`
---
 
-CREATE TABLE `categorie` (
-  `id_cat` int(11) NOT NULL,
-  `code_cat` varchar(15) NOT NULL,
-  `nom_cat` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `Auteur` (`id`, `nom`) VALUES
+(1, 'Yvon'),
+(2, 'Charle');
 
--- --------------------------------------------------------
 
---
--- Structure de la table `categorie_livre`
---
 
-CREATE TABLE `categorie_livre` (
+CREATE TABLE `Categorie` (
   `id` int(11) NOT NULL,
-  `id_cat` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `code` text NOT NULL,
+  `nom` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Structure de la table `editeur`
---
 
-CREATE TABLE `editeur` (
-  `id_editeur` int(11) NOT NULL,
-  `nom_editeur` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `Categorie` (`id`, `code`, `nom`) VALUES
+(1, 'fb', 'format broche'),
+(2, 'fn', 'format Numérique');
 
--- --------------------------------------------------------
 
---
--- Structure de la table `livre`
---
 
-CREATE TABLE `livre` (
+CREATE TABLE `Editeur` (
   `id` int(11) NOT NULL,
-  `titre` varchar(30) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `isbn` varchar(100) NOT NULL,
-  `annee_apparition` year NOT NULL,
-  `image` varchar(100) NOT NULL,
-  `categorie` varchar(15) NOT NULL,
-  `date_creation` year NOT NULL,
-  `date_modification` year NOT NULL,
-  `id_editeur` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `nom` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- INSERT INTO `livre` (`titre`, `description`, `isbn`, `annee_apparition`, `image`) VALUES ('The Pragmatic Programmer', '', '135957052', 'STR_TO_DATE("10-17-2021 15:40:10", "%m-%d-%Y %H:%i:%s")', '');
 
--- BEGIN;
---
--- Index pour les tables déchargées
---
 
---
--- Index pour la table `auteur`
---
-ALTER TABLE `auteur`
-  ADD PRIMARY KEY (`id_auteur`);
+INSERT INTO `Editeur` (`id`, `nom`) VALUES
+(1, 'oumar'),
+(2, 'Ahmat');
 
---
--- Index pour la table `auteur_livre`
---
-ALTER TABLE `auteur_livre`
-  ADD PRIMARY KEY (`id`,`id_auteur`),
-  ADD KEY `id_auteur` (`id_auteur`);
 
---
--- Index pour la table `categorie`
---
-ALTER TABLE `categorie`
-  ADD PRIMARY KEY (`id_cat`);
 
---
--- Index pour la table `categorie_livre`
---
-ALTER TABLE `categorie_livre`
-  ADD PRIMARY KEY (`id`,`id_cat`),
-  ADD KEY `id_cat` (`id_cat`);
+CREATE TABLE `Livre` (
+  `id` int(11) NOT NULL,
+  `titre` text NOT NULL,
+  `description` text NOT NULL,
+  `isbn` int(11) NOT NULL,
+  `annee_apparition` text NOT NULL,
+  `image` text NOT NULL,
+  `categorie` text NOT NULL,
+  `date_creation` text NOT NULL,
+  `date_modification` text NOT NULL,
+  `idediteur` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Index pour la table `editeur`
---
-ALTER TABLE `editeur`
-  ADD PRIMARY KEY (`id_editeur`);
 
---
--- Index pour la table `livre`
---
-ALTER TABLE `livre`
+
+INSERT INTO `Livre` (`id`, `titre`, `description`, `isbn`, `annee_apparition`, `image`, `categorie`, `date_creation`, `date_modification`, `idediteur`) VALUES
+(1, 'Java', 'Programme', 231551, '2019', 'image', 'Oriente', '2012', '2018', 1),
+(2, 'java ', 'programme', 23112, '2014', 'image', 'informatique', '2013', '2019', 1);
+
+
+
+CREATE TABLE `LivreAuteur` (
+  `idlivre` int(11) NOT NULL,
+  `idauteur` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+INSERT INTO `LivreAuteur` (`idlivre`, `idauteur`) VALUES
+(1, 2);
+
+
+
+CREATE TABLE `LivreCategorie` (
+  `idlivre` int(11) NOT NULL,
+  `idcategorie` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+INSERT INTO `LivreCategorie` (`idlivre`, `idcategorie`) VALUES
+(1, 1),
+(1, 2);
+
+
+ALTER TABLE `Auteur`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `Categorie`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `Editeur`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `Livre`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_editeur` (`id_editeur`);
+  ADD KEY `idediteur` (`idediteur`);
 
---
--- AUTO_INCREMENT pour les tables déchargées
---
 
---
--- AUTO_INCREMENT pour la table `auteur`
---
-ALTER TABLE `auteur`
-  MODIFY `id_auteur` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `LivreAuteur`
+  ADD PRIMARY KEY (`idlivre`,`idauteur`),
+  ADD KEY `idlivre` (`idlivre`,`idauteur`),
+  ADD KEY `idauteur` (`idauteur`);
 
---
--- AUTO_INCREMENT pour la table `categorie`
---
-ALTER TABLE `categorie`
-  MODIFY `id_cat` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT pour la table `editeur`
---
-ALTER TABLE `editeur`
-  MODIFY `id_editeur` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `LivreCategorie`
+  ADD PRIMARY KEY (`idlivre`,`idcategorie`),
+  ADD KEY `idlivre` (`idlivre`,`idcategorie`),
+  ADD KEY `idcategorie` (`idcategorie`);
 
---
--- AUTO_INCREMENT pour la table `livre`
---
-ALTER TABLE `livre`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- Contraintes pour les tables déchargées
---
+ALTER TABLE `Livre`
+  ADD CONSTRAINT `livre_ibfk_1` FOREIGN KEY (`idediteur`) REFERENCES `Editeur` (`id`) ON UPDATE CASCADE;
 
---
--- Contraintes pour la table `auteur_livre`
---
-ALTER TABLE `auteur_livre`
-  ADD CONSTRAINT `auteur_livre_ibfk_1` FOREIGN KEY (`id`) REFERENCES `livre` (`id`),
-  ADD CONSTRAINT `auteur_livre_ibfk_2` FOREIGN KEY (`id_auteur`) REFERENCES `auteur` (`id_auteur`);
 
---
--- Contraintes pour la table `categorie_livre`
---
-ALTER TABLE `categorie_livre`
-  ADD CONSTRAINT `categorie_livre_ibfk_1` FOREIGN KEY (`id`) REFERENCES `livre` (`id`),
-  ADD CONSTRAINT `categorie_livre_ibfk_2` FOREIGN KEY (`id_cat`) REFERENCES `categorie` (`id_cat`);
+ALTER TABLE `LivreAuteur`
+  ADD CONSTRAINT `livreauteur_ibfk_1` FOREIGN KEY (`idlivre`) REFERENCES `Livre` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `livreauteur_ibfk_2` FOREIGN KEY (`idauteur`) REFERENCES `Auteur` (`id`) ON UPDATE CASCADE;
 
---
--- Contraintes pour la table `livre`
---
-ALTER TABLE `livre`
-  ADD CONSTRAINT `livre_ibfk_1` FOREIGN KEY (`id_editeur`) REFERENCES `editeur` (`id_editeur`);
+
+ALTER TABLE `LivreCategorie`
+  ADD CONSTRAINT `livrecategorie_ibfk_1` FOREIGN KEY (`idlivre`) REFERENCES `Livre` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `livrecategorie_ibfk_2` FOREIGN KEY (`idcategorie`) REFERENCES `Categorie` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-COMMIT;

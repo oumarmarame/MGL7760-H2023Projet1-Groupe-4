@@ -9,9 +9,6 @@ image_name="biblio_app"
 
 # Créer l'environnement de développement
 function create_environment() {
-  # Construire l'image Docker
-  docker build -t $image_name .
-
   # Lancer tous les conteneurs avec Docker Compose
   docker-compose up -d
 }
